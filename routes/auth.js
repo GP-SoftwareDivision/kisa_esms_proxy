@@ -2,11 +2,21 @@ const express = require('express');
 const router = express.Router();
 const axios = require("axios");
 
-router.post('/',  async (req, res) => {
+
+// 권한 체크 (현재 로그인 중인가 : 페이지 처음 진입 시 필요)
+router.get('/', async (req, res) => {
+    const isValidSession = req.headers.cookie
+
+    if(isValidSession) return res.redirect(`${req.headers.origin}/main/dashboard`);
+    else return res.redirect(`${req.headers.origin}/login`);
+});
+
+// 로그인
+router.post('/', async (req, res) => {
     try {
-        const url = `http://203.245.41.195:1214/api/login`;
+        const url = `${process.env.BACKEND_URL}/login`;
         const response = await axios({
-            method: req.method,
+            method: 'POST',
             url: url,
             data: req.body,
             headers: {
@@ -20,10 +30,31 @@ router.post('/',  async (req, res) => {
             maxAge: 3600000, // 1시간
             httpOnly: true,
         });
-
         res.status(response.status).json(response.data);
     } catch (error) {
-        res.status(500).json({ message: "서버 오류", error: error.message });
+        console.log(error);
+        res.status(error.response?.status).json({ error: error.message });
     }
 });
+
+// 로그아웃
+router.delete('/', async (req, res) => {
+    try {
+        const url = `${process.env.BACKEND_URL}/logout`;
+        const response = await axios({
+            method: 'POST',
+            url: url,
+            headers: {
+                'Content-Type': req.headers['content-type'],
+            },
+            withCredentials: true,
+        });
+        res.clearCookie('session_id');
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error(error);
+        res.status(error.response?.status).json({ error: error.message });
+    }
+});
+
 module.exports = router;
