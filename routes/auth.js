@@ -7,10 +7,8 @@ const axios = require("axios");
 router.get('/', async (req, res) => {
     const isValidSession = req.headers.cookie
 
-    // if(isValidSession) return res.status(200).send({ isLoggedIn : true})
-    // else return res.status(200).send({ isLoggedIn : false})
-    if(isValidSession) return res.redirect('/login');
-    else return res.redirect('/main/dashboard');
+    if(isValidSession) return res.status(200).send({ isLoggedIn : true})
+    else return res.status(200).send({ isLoggedIn : false})
 });
 
 // 로그인
