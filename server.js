@@ -3,6 +3,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
 const uploadRoutes = require('./routes/upload');
+const axios = require("axios");
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+
 
 app.use('/auth', authRoutes);
 app.use('/upload', uploadRoutes);
