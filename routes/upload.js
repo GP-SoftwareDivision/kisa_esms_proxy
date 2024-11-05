@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const ftp = require('basic-ftp');
+const SftpClient = require('ssh2-sftp-client');
 const fs = require('fs');
 const multer = require('multer');
 
@@ -15,28 +16,28 @@ const upload = multer({
 });
 
 
-async function uploadFile(localFilePath, ftpFileName) {
-    console.log('FTP 연결 시도');
-    const client = new ftp.Client();
-    client.ftp.verbose = true;
-
+async function uploadFile(localFilePath, sftpFileName) {
+    console.log('SFTP 연결 시도');
+    const client = new SftpClient();
     try {
-        await client.access({
-            host: process.env.FTP_HOST,
-            port: Number(process.env.FTP_PORT),
-            user: process.env.FTP_USER,
-            password: process.env.FTP_PASSWORD,
-            secure: false,
+        await client.connect({
+            host: process.env.SFTP_HOST,
+            port: Number(process.env.SFTP_PORT),
+            username: process.env.SFTP_USER,
+            password: process.env.SFTP_PASSWORD
         });
-        await client.cd('/ESMS');
-        await client.uploadFrom(localFilePath, ftpFileName);
-        console.log('파일 업로드 성공', ftpFileName);
+        console.log('SFTP 연결 성공');
+        // await client.cwd(`/uploads/${sftpFileName}`);
+        // await client.put(localFilePath, sftpFileName);
+        await client.put(localFilePath, `/uploads/${sftpFileName}`);
+
+        console.log('파일 업로드 성공', sftpFileName);
         fs.unlinkSync(localFilePath);
     } catch (err) {
         console.error('파일 업로드 중 오류 발생: ', err);
         throw err;
     } finally {
-        client.close();
+        await client.end();
     }
 }
 
