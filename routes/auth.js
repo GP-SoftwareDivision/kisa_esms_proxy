@@ -39,6 +39,7 @@ router.post('/', async (req, res) => {
 
 // 로그아웃
 router.delete('/', async (req, res) => {
+
     try {
         const url = `${process.env.BACKEND_URL}/logout`;
         const response = await axios({
@@ -46,13 +47,14 @@ router.delete('/', async (req, res) => {
             url: url,
             headers: {
                 'Content-Type': req.headers['content-type'],
+                'Cookie' : req.headers['cookie']
             },
             withCredentials: true,
         });
         res.clearCookie('session_id');
         res.status(response.status).json(response.data);
     } catch (error) {
-        console.error(error);
+        console.error('error!!!!!!!!!!!', error);
         res.status(error.response?.status).json({ error: error.message });
     }
 });
