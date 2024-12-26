@@ -3,7 +3,6 @@ const express = require('express');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
 const uploadRoutes = require('./routes/upload');
-const axios = require("axios");
 
 dotenv.config();
 
