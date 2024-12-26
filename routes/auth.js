@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 // 로그인
 router.post('/', async (req, res) => {
     try {
-        const url = `${process.env.BACKEND_URL}/login`;
+        const url = `${process.env.BACKEND_URL}/api/login`;
         const response = await axios({
             method: 'POST',
             url: url,
@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
 router.delete('/', async (req, res) => {
 
     try {
-        const url = `${process.env.BACKEND_URL}/logout`;
+        const url = `${process.env.BACKEND_URL}/api/logout`;
         const response = await axios({
             method: 'POST',
             url: url,
