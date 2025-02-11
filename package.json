@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "server": "node server.js"
+    "server": "NODE_ENV=production node server.js",
+    "dev": "NODE_ENV=development node server.js"
   },
   "author": "",
   "license": "ISC",
