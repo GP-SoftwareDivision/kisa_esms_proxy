@@ -48,9 +48,9 @@ async function uploadFile(localFilePath, sftpFileName) {
     try {
         console.log('파일 저장 시작');
 
-        // 현재 실행 중인 서버의 특정 디렉토리에 저장 (예: ./uploads)
         const uploadDir = path.join(__dirname, 'uploads');
 
+        console.log('경로', uploadDir)
         // 디렉토리가 없으면 생성
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir, { recursive: true });
