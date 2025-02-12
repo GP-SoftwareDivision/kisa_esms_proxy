@@ -48,7 +48,7 @@ async function uploadFile(localFilePath, sftpFileName) {
     try {
         console.log('파일 저장 시작');
 
-        const uploadDir = path.join(__dirname, 'uploads');
+        const uploadDir = '/app/files'
 
         console.log('경로', uploadDir)
         // 디렉토리가 없으면 생성
