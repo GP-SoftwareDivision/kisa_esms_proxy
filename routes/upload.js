@@ -1,7 +1,5 @@
 const express = require('express');
 const router = express.Router();
-// const ftp = require('basic-ftp');
-// const SftpClient = require('ssh2-sftp-client');
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
@@ -17,35 +15,8 @@ const upload = multer({
     }),
 });
 
-
-async function uploadFileProduction(localFilePath, sftpFileName) {
-    console.log('운영 SFTP 연결 시도');
-    const client = new SftpClient();
-    try {
-        await client.connect({
-            host: process.env.SFTP_HOST,
-            port: Number(process.env.SFTP_PORT),
-            username: process.env.SFTP_USER,
-            password: process.env.SFTP_PASSWORD
-        });
-        console.log('SFTP 연결 성공');
-        // await client.cwd(`/uploads/${sftpFileName}`);
-        // await client.put(localFilePath, sftpFileName);
-        await client.put(localFilePath, `/uploads/${sftpFileName}`);
-
-        console.log('파일 업로드 성공', sftpFileName);
-        fs.unlinkSync(localFilePath);
-    } catch (err) {
-        console.error('파일 업로드 중 오류 발생: ', err);
-        throw err;
-    } finally {
-        await client.end();
-    }
-}
-
 async function uploadFileDevelop(localFilePath, sftpFileName) {
     console.log('로컬 파일 저장 시작');
-    // const client = new SftpClient();
     try {
         console.log('파일 저장 시작');
 
@@ -80,10 +51,7 @@ router.post('/', upload.single('file'), async (req, res) => {
     }
     try {
 
-        // 개발 환경
-        if (process.env.NODE_ENV === 'development') await uploadFileDevelop(file.path, file.originalname);
-        // 운영 환경
-        else await uploadFileProduction(file.path, file.originalname);
+        await uploadFileDevelop(file.path, file.originalname);
 
         res.send({ msg: '업로드 성공' });
     } catch (error) {

@@ -22,29 +22,28 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-if (process.env.NODE_ENV === 'development') {
-  app.use('/api', async (req, res) => {
-    try {
-      const {method, body, url} = req;
-      const response = await axios({
-        method: method,
-        url: `${process.env.BACKEND_URL}/api${url}`,
-        data: body,
-        headers: {
-          'Content-Type': req.headers['content-type'],
-          'Cookie': req.headers['cookie']
-        },
-        withCredentials: true,
-      });
-      return res.status(response.status).json(response.data);
-    } catch (error) {
-      return res.status(error.response?.status || 500).json({
-        message: error.response?.data || 'Internal Server Error',
-        error: error.message,
-      });
-    }
-  });
-}
+app.use('/api', async (req, res) => {
+  try {
+    const {method, body, url} = req;
+    const response = await axios({
+      method: method,
+      url: `${process.env.BACKEND_URL}/api${url}`,
+      data: body,
+      headers: {
+        'Content-Type': req.headers['content-type'],
+        'Cookie': req.headers['cookie']
+      },
+      withCredentials: true,
+    });
+    return res.status(response.status).json(response.data);
+  } catch (error) {
+    return res.status(error.response?.status || 500).json({
+      message: error.response?.data || 'Internal Server Error',
+      error: error.message,
+    });
+  }
+});
+
 // 라우터 설정
 app.use('/auth', authRoutes);
 app.use('/upload', uploadRoutes);
