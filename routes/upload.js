@@ -1,9 +1,6 @@
 const express = require('express');
 const router = express.Router();
-// const ftp = require('basic-ftp');
-// const SftpClient = require('ssh2-sftp-client');
 const fs = require('fs');
-const path = require('path');
 const multer = require('multer');
 
 const upload = multer({
@@ -43,36 +40,6 @@ async function uploadFileProduction(localFilePath, sftpFileName) {
     }
 }
 
-async function uploadFileDevelop(localFilePath, sftpFileName) {
-    console.log('로컬 파일 저장 시작');
-    // const client = new SftpClient();
-    try {
-        console.log('파일 저장 시작');
-
-        const uploadDir = '/app/files'
-
-        console.log('경로', uploadDir)
-        // 디렉토리가 없으면 생성
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-
-        // 파일을 해당 디렉토리로 이동
-        const destinationPath = path.join(uploadDir, sftpFileName);
-        fs.copyFileSync(localFilePath, destinationPath);
-        fs.unlinkSync(localFilePath); // 원본 파일 삭제
-
-        console.log('파일 저장 성공:', destinationPath);
-
-        console.log('파일 저장 성공:', destinationPath);
-        return destinationPath;
-    } catch (err) {
-        console.error('파일 업로드 중 오류 발생: ', err);
-        throw err;
-    }
-}
-
-
 router.post('/', upload.single('file'), async (req, res) => {
     const file = req.file;
     if (!file) {
@@ -80,12 +47,8 @@ router.post('/', upload.single('file'), async (req, res) => {
     }
     try {
 
-        // 개발 환경
-        if (process.env.NODE_ENV === 'development') await uploadFileDevelop(file.path, file.originalname);
-        // 운영 환경
-        else await uploadFileProduction(file.path, file.originalname);
-
-        res.send({ msg: '업로드 성공' });
+      await uploadFileProduction(file.path, file.originalname);
+      res.send({ msg: '업로드 성공' });
     } catch (error) {
         console.error('업로드 처리 중 오류 발생:', error);
         res.status(500).send({ msg: '업로드 실패.' });
