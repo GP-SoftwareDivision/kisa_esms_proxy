@@ -19,7 +19,7 @@ const upload = multer({
 
 
 async function uploadFileProduction(localFilePath, sftpFileName) {
-    console.log('운영 환경 SFTP 연결 시도');
+    console.log('운영 SFTP 연결 시도');
     const client = new SftpClient();
     try {
         await client.connect({
@@ -44,14 +44,14 @@ async function uploadFileProduction(localFilePath, sftpFileName) {
 }
 
 async function uploadFileDevelop(localFilePath, sftpFileName) {
-    console.log('개발 환경 파일 저장 시작');
+    console.log('로컬 파일 저장 시작');
+    // const client = new SftpClient();
     try {
         console.log('파일 저장 시작');
 
-        const uploadDir = path.join(__dirname, 'files');
+        const uploadDir = '/app/files'
 
         console.log('경로', uploadDir)
-
         // 디렉토리가 없으면 생성
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir, { recursive: true });
@@ -79,7 +79,6 @@ router.post('/', upload.single('file'), async (req, res) => {
 
         // 개발 환경
         if (process.env.NODE_ENV === 'development') await uploadFileDevelop(file.path, file.originalname);
-
         // 운영 환경
         else await uploadFileProduction(file.path, file.originalname);
 
