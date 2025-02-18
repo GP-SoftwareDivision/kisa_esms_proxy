@@ -59,7 +59,10 @@ async function uploadFileDevelop(localFilePath, sftpFileName) {
 
         // 파일을 해당 디렉토리로 이동
         const destinationPath = path.join(uploadDir, sftpFileName);
-        fs.renameSync(localFilePath, destinationPath);
+        fs.copyFileSync(localFilePath, destinationPath);
+        fs.unlinkSync(localFilePath); // 원본 파일 삭제
+
+        console.log('파일 저장 성공:', destinationPath);
 
         console.log('파일 저장 성공:', destinationPath);
         return destinationPath;
