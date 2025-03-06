@@ -27,7 +27,7 @@ router.post('/', async (req, res) => {
 
         const session_id = response.headers.authorization;
         res.cookie('session_id', session_id, {
-            maxAge: 10 * 60 * 1000,
+            maxAge: 3 * 60 * 60 * 1000,
             httpOnly: true,
         });
         res.status(response.status).json(response.data);
