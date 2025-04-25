@@ -1,14 +1,32 @@
-## KISA_DashBoard_Proxy
+## 🛰️ Proxy Server (KISA_Dashboard Proxy)
 
-### Commit Message Convention
+클라이언트와 별도로 운영되는 Express 기반 프록시 서버입니다.  
+**쿠키 관리** 및 **SFTP 파일 업로드** 등의 기능을 담당합니다.
 
-- feat : 새로운 기능 추가
-- fix : 버그 수정
-- docs : 문서 변경
-- chore: 구조 변경 및 추가
-- style: 디자인 변경
-- test: 테스트 코드 추가, 수정, 삭제
-- refactor: 코드 리팩토링 (성능 향상 X, 단순 버그 수정)
-- perf: 성능 향상을 위한 코드 변경
-- build: 빌드 시스템 또는 외부 종속성 변경
-- ci: CI/CD 설정 변경 및 스크립트 수정
+---
+
+### 🛠 기술 스택
+
+- **Node.js**: v22.13.1
+- **패키지 매니저**: npm (v11.1.0)
+- **서버 프레임워크**: Express
+- **컨테이너 환경**: Docker
+
+---
+
+### ⚙️ 실행 방법
+
+```bash
+# 1. 프로젝트 클론
+git clone git@gitlab.com:kisa_dev/kisa_dahsboard_proxy.git
+
+# 2. 패키지 설치
+npm install
+
+# 3. 개발 서버 실행
+npm run server
+
+# 4. 서버 실행 확인
+# 터미널에 아래 메시지가 출력됩니다
+서버 실행 중 8080
+```
